@@ -1,0 +1,102 @@
+.container {
+    max-width: 100%;
+    padding: 30px;
+    overflow-x: auto;
+}
+
+.back-button {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    min-width: 1400px;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #edf2f7;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+tr:hover {
+    background-color: #f8f9fa;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Column specific styles */
+td:nth-child(11) { /* Location column */
+    color: #2c3e50;
+    font-family: monospace;
+    font-size: 13px;
+    color: #4CAF50;
+}
+
+
+
+td:nth-child(9) { /* Boolean */
+    color: #2196F3;
+}
+
+/* Empty state */
+tbody:empty:before {
+    content: 'No data available';
+    display: block;
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Specific column widths */
+th:nth-child(1), td:nth-child(1) { width: 120px; } /* Brand */
+th:nth-child(2), td:nth-child(2) { width: 200px; } /* Category ID */
+th:nth-child(3), td:nth-child(3) { width: 150px; } /* Config */
+th:nth-child(4), td:nth-child(4) { width: 100px; } /* Country Code */
+th:nth-child(5), td:nth-child(5) { width: 100px; } /* Customer ID */
+th:nth-child(6), td:nth-child(6) { width: 50px; }  /* ID */
+th:nth-child(7), td:nth-child(7) { width: 150px; } /* Include Component Types */
+th:nth-child(8), td:nth-child(8) { width: 100px; } /* Include Fields */
+th:nth-child(9), td:nth-child(9) { width: 100px; } /* Is Darkstore */
+th:nth-child(10), td:nth-child(10) { width: 100px; } /* Language Code */
+th:nth-child(11), td:nth-child(11) { width: 200px; } /* Location */
+th:nth-child(12), td:nth-child(12) { width: 120px; } /* Page Name */
+th:nth-child(13), td:nth-child(13) { width: 80px; }  /* Platform */
+th:nth-child(14), td:nth-child(14) { width: 200px; } /* Vendor ID */
+
+.export-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.export-btn:hover {
+    background-color: #45a049;
+} 

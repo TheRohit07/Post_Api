@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Data Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="/" class="nav-link active">Add Location</a>
+            <a href="/table" class="nav-link">View Data</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <h1>Add New Location</h1>
+            
+            <form id="locationForm">
+                <div class="form-group">
+                    <label for="categoryId">Category ID:</label>
+                    <input type="text" id="categoryId" name="categoryId" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="latitude">Latitude:</label>
+                    <input type="number" id="latitude" name="latitude" step="any" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="longitude">Longitude:</label>
+                    <input type="number" id="longitude" name="longitude" step="any" required>
+                </div>
+                
+                <button type="submit">Submit Location</button>
+            </form>
+
+            <div id="successMessage" class="success-message">
+                Data added successfully!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('locationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const categoryId = document.getElementById('categoryId').value;
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+            
+            try {
+                const response = await fetch('/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        category_id: categoryId,
+                        latitude: latitude,
+                        longitude: longitude
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Show success message
+                    document.getElementById('successMessage').style.display = 'block';
+                    
+                    // Clear the form
+                    document.getElementById('locationForm').reset();
+                    
+                    // Hide success message after 3 seconds
+                    setTimeout(() => {
+                        document.getElementById('successMessage').style.display = 'none';
+                    }, 3000);
+                } else {
+                    alert(data.error || 'Error submitting data');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error submitting data');
+            }
+        });
+    </script>
+</body>
+</html> 

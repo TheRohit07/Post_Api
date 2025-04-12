@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Data Table</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='table.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="/" class="nav-link">Add Location</a>
+            <a href="/table" class="nav-link active">View Data</a>
+            <button id="exportCsv" class="export-btn">Export to CSV</button>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <h1>Location Data Table</h1>
+            
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Brand</th>
+                        <th>Category ID</th>
+                        <th>Config</th>
+                        <th>Country Code</th>
+                        <th>Customer ID</th>
+                        <th>Include Component Types</th>
+                        <th>Include Fields</th>
+                        <th>Is Darkstore</th>
+                        <th>Language Code</th>
+                        <th>Location</th>
+                        <th>Page Name</th>
+                        <th>Platform</th>
+                        <th>Vendor ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Results will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Fetch data when the page loads
+        fetch('/get')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('table tbody');
+                tableBody.innerHTML = ''; // Clear existing rows
+                
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    
+                    // Create cells for each field in the correct order
+                    const fields = [
+                        item.brand,
+                        item.category_id,
+                        item.config,
+                        item.country_code,
+                        item.customer_id,
+                        item.include_component_types.join(', '),
+                        item.include_fields.join(', '),
+                        item.is_darkstore ? 'TRUE' : 'FALSE',
+                        item.language_code,
+                        `${item.location.point.latitude}, ${item.location.point.longitude}`,
+                        item.page_name,
+                        item.platform,
+                        item.vendor_id
+                    ];
+                    
+                    fields.forEach(field => {
+                        const cell = document.createElement('td');
+                        cell.textContent = field;
+                        row.appendChild(cell);
+                    });
+                    
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+        document.getElementById('exportCsv').addEventListener('click', function() {
+            // Get table data
+            const table = document.querySelector('table');
+            const rows = table.querySelectorAll('tr');
+            
+            // Check if there's any data (excluding header row)
+            if (rows.length <= 1) {
+                alert('No data available to export. Please add some locations first.');
+                return;
+            }
+            
+            // Create CSV content
+            let csvContent = '';
+            
+            // Add headers
+            const headers = Array.from(rows[0].querySelectorAll('th')).map(th => th.textContent);
+            csvContent += headers.join(',') + '\n';
+            
+            // Add data rows
+            for (let i = 1; i < rows.length; i++) {
+                const cells = Array.from(rows[i].querySelectorAll('td')).map(td => {
+                    const cellText = td.textContent;
+                    // Handle special characters and commas
+                    if (cellText.includes(',') || cellText.includes('"')) {
+                        return `"${cellText.replace(/"/g, '""')}"`;
+                    }
+                    return cellText;
+                });
+                csvContent += cells.join(',') + '\n';
+            }
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'location_data.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    </script>
+</body>
+</html> 
